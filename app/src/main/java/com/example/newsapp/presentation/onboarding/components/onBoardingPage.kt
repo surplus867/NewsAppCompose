@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.newsapp.R
 import com.example.newsapp.presentation.onboarding.Dimens.MediumPadding1
 import com.example.newsapp.presentation.onboarding.Dimens.MediumPadding2
 import com.example.newsapp.presentation.onboarding.Page
@@ -27,12 +28,12 @@ import com.example.newsapp.ui.theme.NewsAppTheme
 @Composable
 fun OnBoardingPage(
     modifier: Modifier = Modifier,
-    page: Page
+    page: Page,
 ) {
     // A Column composable that represents an onboarding page
     Column(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
     ) {
         // Displaying an image at the top of the onboarding page
@@ -72,7 +73,11 @@ fun OnBoardingPagePreview() {
     NewsAppTheme {
         // Previewing the onBoardingPage with sample data
         OnBoardingPage(
-            page = pages[0]
+            page = Page(
+                title = "Lorem Ipsum is simply dummy",
+                description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                image = R.drawable.onboarding1
+            )
         )
     }
 }
