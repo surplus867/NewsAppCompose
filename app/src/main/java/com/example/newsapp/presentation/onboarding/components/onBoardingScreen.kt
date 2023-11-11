@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -23,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.newsapp.presentation.onboarding.Dimens.MediumPadding2
 import com.example.newsapp.presentation.onboarding.Dimens.PageIndicatorWidth
+import com.example.newsapp.presentation.onboarding.OnBoardingEvent
 import com.example.newsapp.presentation.onboarding.common.NewsButton
 import com.example.newsapp.presentation.onboarding.common.NewsTextButton
 import com.example.newsapp.presentation.onboarding.pages
@@ -30,7 +30,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnBoardingScreen() {
+fun OnBoardingScreen(
+    event: (OnBoardingEvent) -> Unit
+) {
     // Column layout to contain the onboarding screen
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -101,9 +103,8 @@ fun OnBoardingScreen() {
                         text = buttonState.value[1],
                         onClick = {
                             scope.launch {
-                                if (pagerState.currentPage == 3) {
-                                    //TODO: Navigate to Home Screen
-                                    Log.d("onBoardingScreen", "Navigate to Home Screen")
+                                if (pagerState.currentPage == 2) {
+                                    event(OnBoardingEvent.SaveAppEntry)
                                 } else {
                                     pagerState.animateScrollToPage(
                                         page = pagerState.currentPage + 1

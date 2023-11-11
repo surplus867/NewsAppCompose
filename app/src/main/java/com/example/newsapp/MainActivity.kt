@@ -6,17 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import com.example.newsapp.domain.manager.usecases.AppEntryUseCases
+import com.example.newsapp.presentation.onboarding.OnBoardingViewModel
 import com.example.newsapp.presentation.onboarding.components.OnBoardingScreen
 import com.example.newsapp.ui.theme.NewsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,10 +25,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    // Field to be injected with the AppEntryUseCases instance.
-    // The @Inject annotation informs Hilt to provide this dependency.
+    // Injecting the AppEntryUseCases dependency using Hilt
     @Inject
-    lateinit var appEntryUseCases: AppEntryUseCases
+    lateinit var useCases: AppEntryUseCases
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,12 +37,11 @@ class MainActivity : ComponentActivity() {
         // Install the splash screen
         installSplashScreen()
 
-        // Asynchronously read the app entry status using AppEntryUseCases
+        // Coroutine scope for asynchronous tasks
         lifecycleScope.launch {
-            // Collect the Flow emitted by readAppEntry
-            appEntryUseCases.readAppEntry().collect {
-                // Log the app entry status for testing purposes
-                Log.d("Test", it.toString())
+            // Reading the app entry using AppEntryUseCases and collecting the result
+            useCases.readAppEntry().collect {
+                Log.d("test", it.toString())
             }
         }
         // set the content of the activity using Jetpack Compose
@@ -54,8 +49,11 @@ class MainActivity : ComponentActivity() {
             NewsAppTheme {
                 // Create a Compose Box with a background color
                 Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
-                    // Display the onBoardingScreen within the Box
-                    OnBoardingScreen()
+                    // Display the onBoardingScreen within the Box, obtaining the ViewModel using Hilt
+                    val viewModel: OnBoardingViewModel  = hiltViewModel()
+                    OnBoardingScreen(
+                        event = viewModel:: onEvent
+                    )
                 }
             }
         }
