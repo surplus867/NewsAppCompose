@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
@@ -12,7 +13,9 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.newsapp.domain.manager.usecases.AppEntryUseCases
+import com.example.newsapp.presentation.navGraph.NavGraph
 import com.example.newsapp.presentation.onboarding.OnBoardingViewModel
 import com.example.newsapp.presentation.onboarding.components.OnBoardingScreen
 import com.example.newsapp.ui.theme.NewsAppTheme
@@ -25,35 +28,28 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    // Injecting the AppEntryUseCases dependency using Hilt
-    @Inject
-    lateinit var useCases: AppEntryUseCases
+    val viewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // Set system window decorations
-        WindowCompat.setDecorFitsSystemWindows(window,false)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // Install the splash screen
-        installSplashScreen()
-
-        // Coroutine scope for asynchronous tasks
-        lifecycleScope.launch {
-            // Reading the app entry using AppEntryUseCases and collecting the result
-            useCases.readAppEntry().collect {
-                Log.d("test", it.toString())
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                viewModel.splashCondition
             }
         }
+
         // set the content of the activity using Jetpack Compose
         setContent {
             NewsAppTheme {
                 // Create a Compose Box with a background color
                 Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
-                    // Display the onBoardingScreen within the Box, obtaining the ViewModel using Hilt
-                    val viewModel: OnBoardingViewModel  = hiltViewModel()
-                    OnBoardingScreen(
-                        event = viewModel:: onEvent
-                    )
+                    val startDestination = viewModel.startDestination
+                    NavGraph(startDestination = startDestination)
+
                 }
             }
         }
