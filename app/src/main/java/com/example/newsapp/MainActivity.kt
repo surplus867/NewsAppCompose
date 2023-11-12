@@ -41,9 +41,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             NewsAppTheme {
 
+                // Check if the system is in dark mode
                 val isSystemInDarkMode = isSystemInDarkTheme()
+
+                // Create a controller to manage the system UI appearance
                 val systemController = rememberSystemUiController()
 
+                // Apply a SideEffect to set the system bars color when the composition is applied
+                // The 'SideEffect' block is used correctly to set the system bars color
                 SideEffect {
                     systemController.setSystemBarsColor(
                         color = Color.Transparent,
@@ -54,7 +59,11 @@ class MainActivity : ComponentActivity() {
 
                 // Create a Compose Box with a background color
                 Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
+
+                    // Get the start destination for the navigation graph from the ViewModel
                     val startDestination = viewModel.startDestination
+
+                    // Display the navigation graph (defined in the NavGraph composable)
                     NavGraph(startDestination = startDestination)
 
                 }
