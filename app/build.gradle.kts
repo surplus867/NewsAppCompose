@@ -105,4 +105,7 @@ dependencies {
     // Paging 3
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("androidx.paging:paging-compose-android:3.3.0-alpha02")
+
+    // Accompanist
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.31.4-beta")
 }
