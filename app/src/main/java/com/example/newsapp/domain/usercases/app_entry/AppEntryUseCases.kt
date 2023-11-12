@@ -1,4 +1,4 @@
-package com.example.newsapp.domain.manager.usecases
+package com.example.newsapp.domain.usercases.app_entry
 
 // Data class representing a container for app entry-related use cases.
 data class AppEntryUseCases(
