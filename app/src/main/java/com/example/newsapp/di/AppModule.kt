@@ -2,14 +2,22 @@ package com.example.newsapp.di
 
 import android.app.Application
 import com.example.newsapp.data.manager.LocalUserMangerImpl
+import com.example.newsapp.data.remote.dto.NewsApi
+import com.example.newsapp.data.repository.NewsRepositoryImpl
 import com.example.newsapp.domain.manager.LocalUserManager
+import com.example.newsapp.domain.manager.usecases.news.GetNews
+import com.example.newsapp.domain.manager.usecases.news.NewsUseCases
+import com.example.newsapp.domain.repository.NewsRepository
 import com.example.newsapp.domain.usercases.app_entry.AppEntryUseCases
 import com.example.newsapp.domain.usercases.app_entry.ReadAppEntry
 import com.example.newsapp.domain.usercases.app_entry.SaveAppEntry
+import com.example.newsapp.utili.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 // Dagger Hilt module providing dependencies related to the application module.
@@ -35,6 +43,32 @@ object AppModule {
         readAppEntry = ReadAppEntry(localUserManger),
         saveAppEntry = SaveAppEntry(localUserManger)
     )
+
+    @Provides
+    @Singleton
+    fun provideNewsApi(): NewsApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(NewsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNewsRepository(
+        newsApi: NewsApi
+    ): NewsRepository = NewsRepositoryImpl(newsApi)
+
+    @Provides
+    @Singleton
+    fun provideNewsUseCases(
+        newsRepository: NewsRepository
+    ): NewsUseCases {
+        return NewsUseCases(
+            getNews = GetNews(newsRepository)
+        )
+    }
 
 
 }
