@@ -7,6 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.newsapp.presentation.home.HomeScreen
+import com.example.newsapp.presentation.home.HomeViewModel
 import com.example.newsapp.presentation.onboarding.OnBoardingViewModel
 import com.example.newsapp.presentation.onboarding.components.OnBoardingScreen
 
@@ -33,7 +36,7 @@ fun NavGraph(
                 // Display the onBoardingScreen within the Box, obtaining the ViewModel using Hilt
                 val viewModel: OnBoardingViewModel = hiltViewModel()
                 OnBoardingScreen(
-                    event = viewModel:: onEvent
+                    event = viewModel::onEvent
                 )
             }
         }
@@ -47,7 +50,9 @@ fun NavGraph(
         ) {
             // Inside this branch, a 'composable' is used to display a simple text message.
             composable(route = Route.NewsNavigationScreen.route) {
-                Text(text = "News Navigator Screen")
+                val viewModel: HomeViewModel = hiltViewModel()
+                val articles = viewModel.news.collectAsLazyPagingItems()
+                HomeScreen(articles = articles, navigate = {})
             }
         }
     }

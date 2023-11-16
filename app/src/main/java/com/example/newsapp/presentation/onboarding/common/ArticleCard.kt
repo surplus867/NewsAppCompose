@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -41,23 +42,30 @@ fun ArticleCard(
     onClick: () -> Unit
 ) {
 
+    // Accessing the current context
     val context = LocalContext.current
 
+    // Creating a clickable Row for the article card
     Row(modifier = modifier.clickable { onClick() }) {
 
+        // Displaying the article image asynchronously
         AsyncImage(
             modifier = Modifier
                 .size(ArticleCardSize)
                 .clip(MaterialTheme.shapes.medium),
             model = ImageRequest.Builder(context).data(article.urlToImage).build(),
-            contentDescription = null
+            contentDescription = null,
+            contentScale = ContentScale.Crop
         )
+
+        // Column for article details
         Column(
             verticalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
                 .padding(horizontal = ExtraSmallPadding)
                 .height(ArticleCardSize)
         ) {
+            // Displaying the article title with a maximum of 2 lines
             Text(
                 text = article.title,
                 style = MaterialTheme.typography.bodyMedium,
@@ -67,6 +75,8 @@ fun ArticleCard(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
+
+            // Row for source name, clock icon, and publication time
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = article.source.name,
@@ -76,13 +86,20 @@ fun ArticleCard(
                     )
                 )
 
+                // Adding space between source name and clock icon
                 Spacer(modifier = Modifier.width(ExtraSmallPadding2))
+
+                // Displaying the clock icon
                 Icon(
                     painter = painterResource(id = R.drawable.ic_time), contentDescription = null,
                     modifier = Modifier.size(SmallIconSize),
                     tint = colorResource(id = R.color.body)
                 )
+
+                // Adding space between clock icon and publication time
                 Spacer(modifier = Modifier.width(ExtraSmallPadding2))
+
+                // Displaying the publication time
                 Text(
                     text = article.publishedAt,
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
@@ -93,6 +110,7 @@ fun ArticleCard(
     }
 }
 
+// Preview function for the ArticleCard
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
@@ -100,16 +118,18 @@ fun ArticleCardPreview() {
     NewsAppTheme {
         ArticleCard(
             article = Article(
+                // Sample article data for preview
                 author = "",
                 content = "",
                 description = "",
                 publishedAt = "2 hours",
                 source = Source(id = "", name = "BBC"),
-                title = "Her traints broke down. Her phone died. And then she met her saver in a",
+                title = "Her trains broke down. Her phone died. And then she met her saver in a",
                 url = "",
                 urlToImage = ""
             )
         ) {
+            // Empty onClick function for preview
 
         }
     }

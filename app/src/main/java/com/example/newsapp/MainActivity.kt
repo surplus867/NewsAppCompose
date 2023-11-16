@@ -56,7 +56,6 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-
                 // Create a Compose Box with a background color
                 Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
 
@@ -65,7 +64,6 @@ class MainActivity : ComponentActivity() {
 
                     // Display the navigation graph (defined in the NavGraph composable)
                     NavGraph(startDestination = startDestination)
-
                 }
             }
         }
