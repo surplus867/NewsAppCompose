@@ -7,6 +7,7 @@ import com.example.newsapp.data.repository.NewsRepositoryImpl
 import com.example.newsapp.domain.manager.LocalUserManager
 import com.example.newsapp.domain.manager.usecases.news.GetNews
 import com.example.newsapp.domain.manager.usecases.news.NewsUseCases
+import com.example.newsapp.domain.manager.usecases.news.SearchNews
 import com.example.newsapp.domain.repository.NewsRepository
 import com.example.newsapp.domain.usercases.app_entry.AppEntryUseCases
 import com.example.newsapp.domain.usercases.app_entry.ReadAppEntry
@@ -66,9 +67,8 @@ object AppModule {
         newsRepository: NewsRepository
     ): NewsUseCases {
         return NewsUseCases(
-            getNews = GetNews(newsRepository)
+            getNews = GetNews(newsRepository),
+            searchNews = SearchNews(newsRepository)
         )
     }
-
-
 }
