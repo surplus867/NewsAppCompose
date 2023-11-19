@@ -15,7 +15,7 @@ class NewsTypeConvertor {
     @TypeConverter
     fun stringToSource(source: String): Source {
         return source.split(",").let { sourceArray ->
-            Source(sourceArray[0], name = sourceArray[1])
+            Source(sourceArray[0], sourceArray[1])
         }
     }
 }
