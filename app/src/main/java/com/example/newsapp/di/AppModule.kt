@@ -9,9 +9,12 @@ import com.example.newsapp.data.manager.LocalUserMangerImpl
 import com.example.newsapp.data.remote.dto.NewsApi
 import com.example.newsapp.data.repository.NewsRepositoryImpl
 import com.example.newsapp.domain.manager.LocalUserManager
+import com.example.newsapp.domain.manager.usecases.news.DeleteArticle
 import com.example.newsapp.domain.manager.usecases.news.GetNews
 import com.example.newsapp.domain.manager.usecases.news.NewsUseCases
 import com.example.newsapp.domain.manager.usecases.news.SearchNews
+import com.example.newsapp.domain.manager.usecases.news.SelectArticles
+import com.example.newsapp.domain.manager.usecases.news.UpsertArticle
 import com.example.newsapp.domain.repository.NewsRepository
 import com.example.newsapp.domain.usercases.app_entry.AppEntryUseCases
 import com.example.newsapp.domain.usercases.app_entry.ReadAppEntry
@@ -69,11 +72,15 @@ object AppModule {
     @Provides
     @Singleton
     fun provideNewsUseCases(
-        newsRepository: NewsRepository
+        newsRepository: NewsRepository,
+        newsDao: NewsDao
     ): NewsUseCases {
         return NewsUseCases(
             getNews = GetNews(newsRepository),
-            searchNews = SearchNews(newsRepository)
+            searchNews = SearchNews(newsRepository),
+            upsertArticle = UpsertArticle(newsDao),
+            deleteArticle = DeleteArticle(newsDao),
+            selectArticles = SelectArticles(newsDao)
         )
     }
 

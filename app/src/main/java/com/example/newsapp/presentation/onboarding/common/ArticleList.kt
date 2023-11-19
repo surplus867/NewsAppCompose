@@ -14,6 +14,27 @@ import com.example.newsapp.domain.model.Article
 import com.example.newsapp.presentation.onboarding.Dimens.ExtraSmallPadding2
 import com.example.newsapp.presentation.onboarding.Dimens.MediumPadding1
 
+
+@Composable
+fun ArticlesList(
+    modifier: Modifier = Modifier,
+    articles: List<Article>,
+    onClick: (Article) -> Unit
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(MediumPadding1),
+        contentPadding = PaddingValues(all = ExtraSmallPadding2)
+    ) {
+        // Iterate through the articles and display each article using ArticleCard.
+        items(count = articles.size) {
+            val article = articles[it]
+            ArticleCard(article = article, onClick = { onClick(article) })
+
+        }
+    }
+}
+
 /**
  * Composable for displaying a list of articles with paging support.
  *
@@ -31,7 +52,7 @@ fun ArticlesList(
     val handlePagingResult = handlePagingResult(articles = articles)
     if (handlePagingResult) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(MediumPadding1),
             contentPadding = PaddingValues(all = ExtraSmallPadding2)
         ) {
