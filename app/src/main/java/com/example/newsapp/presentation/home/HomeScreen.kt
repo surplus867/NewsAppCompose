@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import com.example.newsapp.R
 import com.example.newsapp.domain.model.Article
+import com.example.newsapp.presentation.details.components.DetailsEvent
 import com.example.newsapp.presentation.navGraph.Route
 import com.example.newsapp.presentation.onboarding.Dimens.MediumPadding1
 import com.example.newsapp.presentation.onboarding.common.ArticlesList
@@ -31,7 +32,11 @@ import com.example.newsapp.presentation.onboarding.common.SearchBar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(articles: LazyPagingItems<Article>, navigate: (String) -> Unit) {
+fun HomeScreen(
+    articles: LazyPagingItems<Article>,
+    navigateToSearch: () -> Unit,
+    navigateToDetails: (Article) -> Unit
+) {
     val titles by remember {
         // Derive state for titles to display in the marquee
         // The 'titles' variable is derived from the first 10 articles' titles using
@@ -75,9 +80,9 @@ fun HomeScreen(articles: LazyPagingItems<Article>, navigate: (String) -> Unit) {
             readOnly = true,
             onValueChange = {},
             onClick = {
-                // Navigate to the search screen
-                navigate(Route.SearchScreen.route)
-            }, onSearch = {}
+                navigateToSearch
+            },
+            onSearch = {}
         )
 
         Spacer(modifier = Modifier.height(MediumPadding1))
@@ -100,7 +105,7 @@ fun HomeScreen(articles: LazyPagingItems<Article>, navigate: (String) -> Unit) {
             modifier = Modifier.padding(horizontal = MediumPadding1),
             articles = articles,
             onClick = {
-                navigate(Route.DetailsScreen.route)
+                navigateToDetails(it)
             }
         )
 

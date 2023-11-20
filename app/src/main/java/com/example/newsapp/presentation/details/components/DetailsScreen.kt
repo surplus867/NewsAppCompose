@@ -61,7 +61,7 @@ fun DetailsScreen(
                     context.startActivity(Intent.createChooser(it,null))
                 }
             },
-            onBookmarkClick = { event(DetailsEvent.SaveArticle) },
+            onBookmarkClick = { event(DetailsEvent.UpsertDeleteArticle(article)) },
             onBackClick = navigateUp
         )
         //LazyColumn for displaying article content

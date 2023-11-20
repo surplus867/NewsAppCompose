@@ -13,6 +13,7 @@ import com.example.newsapp.domain.manager.usecases.news.DeleteArticle
 import com.example.newsapp.domain.manager.usecases.news.GetNews
 import com.example.newsapp.domain.manager.usecases.news.NewsUseCases
 import com.example.newsapp.domain.manager.usecases.news.SearchNews
+import com.example.newsapp.domain.manager.usecases.news.SelectArticle
 import com.example.newsapp.domain.manager.usecases.news.SelectArticles
 import com.example.newsapp.domain.manager.usecases.news.UpsertArticle
 import com.example.newsapp.domain.repository.NewsRepository
@@ -53,6 +54,7 @@ object AppModule {
         saveAppEntry = SaveAppEntry(localUserManger)
     )
 
+    // Provide a singleton instance of NewsApi using Retrofit.
     @Provides
     @Singleton
     fun provideNewsApi(): NewsApi {
@@ -63,27 +65,32 @@ object AppModule {
             .create(NewsApi::class.java)
     }
 
+    // Provide a singleton instance of a NewsRepositoryImpl.
     @Provides
     @Singleton
     fun provideNewsRepository(
-        newsApi: NewsApi
-    ): NewsRepository = NewsRepositoryImpl(newsApi)
+        newsApi: NewsApi,
+        newsDao: NewsDao
+    ): NewsRepository = NewsRepositoryImpl(newsApi, newsDao)
 
+    // Provides a singleton instance of NewsUseCases. It depends on a singleton
+    // instance of NewsRepository and uses various news-related use cases.
     @Provides
     @Singleton
     fun provideNewsUseCases(
         newsRepository: NewsRepository,
-        newsDao: NewsDao
     ): NewsUseCases {
         return NewsUseCases(
             getNews = GetNews(newsRepository),
             searchNews = SearchNews(newsRepository),
-            upsertArticle = UpsertArticle(newsDao),
-            deleteArticle = DeleteArticle(newsDao),
-            selectArticles = SelectArticles(newsDao)
+            upsertArticle = UpsertArticle(newsRepository),
+            deleteArticle = DeleteArticle(newsRepository),
+            selectArticles = SelectArticles(newsRepository),
+            selectArticle = SelectArticle(newsRepository)
         )
     }
 
+    // Provides a singleton instance of NewsDatabase using Room.
     @Provides
     @Singleton
     fun provideNewsDatabase(
@@ -98,6 +105,7 @@ object AppModule {
             .build()
     }
 
+    // Provides a singleton instance of NewsDao.
     @Provides
     @Singleton
     fun provideNewsDao(

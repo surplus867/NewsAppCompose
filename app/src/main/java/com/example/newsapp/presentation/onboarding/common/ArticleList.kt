@@ -15,6 +15,7 @@ import com.example.newsapp.presentation.onboarding.Dimens.ExtraSmallPadding2
 import com.example.newsapp.presentation.onboarding.Dimens.MediumPadding1
 
 
+// Composable function to display a list of articles using a LazyColumn
 @Composable
 fun ArticlesList(
     modifier: Modifier = Modifier,
